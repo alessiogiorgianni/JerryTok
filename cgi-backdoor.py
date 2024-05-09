@@ -12,8 +12,8 @@ def exploit_ssti(payload):
     return requests.get(
         ssti_url.format(payload ),
         proxies={
-            'http': 'http://127.0.0.1:8080',
-            'https': 'https://127.0.0.1:8080',
+            # 'http': 'http://127.0.0.1:8080',
+            # 'https': 'https://127.0.0.1:8080',
         }
     )
 
